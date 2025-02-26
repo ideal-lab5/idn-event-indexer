@@ -1,0 +1,11 @@
+[workspace]
+resolver = "2"
+
+members = [
+    "polkadot-metadata",
+    "kusama-metadata",
+    "rococo-metadata",
+    "westend-metadata",
+    "ideal-network-local-metadata",
+    "indexer",
+]
