@@ -41,7 +41,7 @@ jobs:
       run: cargo fetch
 
     - name: Build
-      run: cargo build --verbose
+      run: cargo build +nightly --verbose
 
     - name: Run cargo fmt
       run: cargo +nightly fmt -- --check
