@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - cki/github-workflow
   pull_request:
     branches:
       - main
@@ -31,6 +32,9 @@ jobs:
     - name: Install rustfmt for nightly
       run: rustup component add --toolchain nightly rustfmt
 
+    - name: Install llvm-tools-preview for stable
+      run: rustup component add llvm-tools-preview --toolchain stable-x86_64-unknown-linux-gnu
+
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -48,11 +52,14 @@ jobs:
     - name: Run cargo clippy
       run: cargo +nightly clippy -- -D warnings
 
-    - name: Install cargo-tarpaulin
-      run: cargo install cargo-tarpaulin
+    - name: Install llvm-cov
+      uses: taiki-e/install-action@cargo-llvm-cov
 
-    - name: Run cargo tarpaulin
-      run: cargo +nightly tarpaulin --rustflags="-C opt-level=0" --no-fail-fast --out xml
+    - name: Install nextest
+      uses: taiki-e/install-action@nextest
+
+    - name: Run Tests
+      run: cargo llvm-cov --cobertura --output-path cobertura.xml nextest
 
     - name: Generate Code Coverage Summary
       uses: irongut/CodeCoverageSummary@v1.3.0
