@@ -19,4 +19,4 @@ byte-unit = "4.0.19"
 serde = { version = "1.0.162", features = ["derive"] }
 zerocopy = "0.7.8"
 tracing-log = "0.2.0"
-acuity-index-substrate = { path = "../../idn-acuity-index-substrate" }
+acuity-index-substrate = { git = "https://github.com/ideal-lab5/idn-acuity-index-substrate", version = "=0.6.2" }
