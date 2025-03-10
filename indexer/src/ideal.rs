@@ -14,7 +14,7 @@ use acuity_index_substrate::*;
 pub struct IdealIndexer;
 
 impl acuity_index_substrate::shared::RuntimeIndexer for IdealIndexer {
-    type RuntimeConfig = subxt::PolkadotConfig;  // You might need to adjust this based on your chain's configuration
+    type RuntimeConfig = subxt::PolkadotConfig; // You might need to adjust this based on your chain's configuration
     type ChainKey = ChainKey;
 
     fn get_name() -> &'static str {
