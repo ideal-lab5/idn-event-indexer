@@ -1,4 +1,4 @@
-use ideal_network_local_metadata::ideal_network_local_metadata::{
+use ideal_metadata::ideal_metadata::{
 	runtime_types::{
 		frame_system::pallet::Event as SystemEvent,
 		pallet_balances::pallet::Event as BalancesEvent,
@@ -7,9 +7,11 @@ use ideal_network_local_metadata::ideal_network_local_metadata::{
 	Event,
 };
 
-use crate::*;
+use crate::{
+	config::{DEFAULT_URL, GENESIS_HASH},
+	*,
+};
 use acuity_index_substrate::*;
-use hex_literal::hex;
 
 pub struct IdealIndexer;
 
@@ -22,8 +24,7 @@ impl acuity_index_substrate::shared::RuntimeIndexer for IdealIndexer {
 	}
 
 	fn get_genesis_hash() -> <Self::RuntimeConfig as subxt::Config>::Hash {
-		// Replace with your chain's genesis hash
-		hex!["af97825bf72091072a08b9dbff88d6664e2061bcb4e28a90f17bd85572d8f8ae"].into() // Temporary placeholder
+		(*GENESIS_HASH).into()
 	}
 
 	fn get_versions() -> &'static [u32] {
@@ -31,7 +32,7 @@ impl acuity_index_substrate::shared::RuntimeIndexer for IdealIndexer {
 	}
 
 	fn get_default_url() -> &'static str {
-		"ws://127.0.0.1:1234" // Replace with your actual endpoint
+		&DEFAULT_URL
 	}
 
 	fn process_event(

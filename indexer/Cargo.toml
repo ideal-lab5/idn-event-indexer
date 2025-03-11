@@ -1,22 +1,22 @@
 [package]
-name = "acuity-index-polkadot"
-version = "0.2.2"
+name = "acuity-index-ideal"
+version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-polkadot-metadata = { path = "../polkadot-metadata" }
-kusama-metadata = { path = "../kusama-metadata" }
-rococo-metadata = { path = "../rococo-metadata" }
-westend-metadata = { path = "../westend-metadata" }
-ideal-network-local-metadata = { path = "../ideal-network-local-metadata" }
-tokio = { version = "1.28.2", features = ["macros", "rt", "rt-multi-thread"] }
-subxt = "0.35.3"
-clap = { version = "4.3.19", features = ["derive"] }
-hex-literal = "0.4.1"
-clap-verbosity-flag = "2.0.1"
-sled = { version = "0.34.7", default-features = false }
-byte-unit = "4.0.19"
-serde = { version = "1.0.162", features = ["derive"] }
-zerocopy = "0.7.8"
-tracing-log = "0.2.0"
+ideal-metadata = { path = "../ideal-metadata" }
 acuity-index-substrate = { git = "https://github.com/ideal-lab5/idn-acuity-index-substrate", version = "=0.6.2" }
+byte-unit = "4.0.19"
+clap = { version = "4.5.1", features = ["derive"] }
+clap-verbosity-flag = "2.2.0"
+serde = { version = "1.0.130", features = ["derive"] }
+serde_json = "1.0.68"
+sled = "0.34.7"
+subxt = "0.35.3"
+tokio = { version = "1.35.1", features = ["full"] }
+tracing = "0.1.40"
+tracing-log = "0.2.0"
+zerocopy = "0.7.32"
+hex = "0.4.3"
+hex-literal = "0.4.1"
+lazy_static = "1.4.0"
