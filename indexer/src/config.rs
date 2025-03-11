@@ -12,5 +12,5 @@ lazy_static! {
 		bytes
 	};
 	pub static ref DEFAULT_URL: String =
-		{ env::var("IDN_WS_URL").unwrap_or_else(|_| "ws://127.0.0.1:1234".to_string()) };
+		env::var("IDN_WS_URL").unwrap_or_else(|_| "ws://127.0.0.1:1234".to_string());
 }
