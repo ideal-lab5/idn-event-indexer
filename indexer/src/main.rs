@@ -13,35 +13,8 @@ mod tests;
 
 mod config;
 mod ideal;
-mod pallets;
 
 use ideal::IdealIndexer;
-
-// Let's add a test function to see what's available
-#[allow(dead_code)]
-fn print_runtime_info() {
-	use ideal_metadata::ideal_metadata::Event;
-	println!("Available Event variants:");
-
-	// We can't enumerate all variants at runtime, but we can try to see what compiles
-	// Let's check if the IDN variants exist by trying to compile them
-
-	// Test if these compile (they will be dead code but help us see if the types exist)
-	#[allow(unreachable_code)]
-	{
-		return;
-		// These would only compile if the variants exist:
-		let _test: Event = panic!(); // This will never run, just for type checking
-		match _test {
-			Event::System(_) => {},
-			Event::Balances(_) => {},
-			// Test if these exist:
-			// Event::IdnManager(_) => {},
-			// Event::RandomnessBeacon(_) => {},
-			_ => {},
-		}
-	}
-}
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
 pub enum Chain {

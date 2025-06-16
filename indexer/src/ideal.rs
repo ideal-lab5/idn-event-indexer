@@ -42,9 +42,6 @@ impl acuity_index_substrate::shared::RuntimeIndexer for IdealIndexer {
 		event_index: u16,
 		event: subxt::events::EventDetails<Self::RuntimeConfig>,
 	) -> Result<u32, IndexError> {
-		// Debug print event names to see what's available
-		println!("Event pallet: {}, variant: {}", event.pallet_name(), event.variant_name());
-
 		Ok(match event.as_root_event::<Event>()? {
 			Event::System(event) => {
 				index_system_event![SystemEvent, event, indexer, block_number, event_index]
