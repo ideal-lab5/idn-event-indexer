@@ -17,6 +17,32 @@ mod pallets;
 
 use ideal::IdealIndexer;
 
+// Let's add a test function to see what's available
+#[allow(dead_code)]
+fn print_runtime_info() {
+	use ideal_metadata::ideal_metadata::Event;
+	println!("Available Event variants:");
+
+	// We can't enumerate all variants at runtime, but we can try to see what compiles
+	// Let's check if the IDN variants exist by trying to compile them
+
+	// Test if these compile (they will be dead code but help us see if the types exist)
+	#[allow(unreachable_code)]
+	{
+		return;
+		// These would only compile if the variants exist:
+		let _test: Event = panic!(); // This will never run, just for type checking
+		match _test {
+			Event::System(_) => {},
+			Event::Balances(_) => {},
+			// Test if these exist:
+			// Event::IdnManager(_) => {},
+			// Event::RandomnessBeacon(_) => {},
+			_ => {},
+		}
+	}
+}
+
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
 pub enum Chain {
 	Ideal,
@@ -42,6 +68,7 @@ pub struct ChainTrees {
 	pub account_id: Tree,
 	pub block_hash: Tree,
 	pub extrinsic_hash: Tree,
+	// IDN-specific trees removed - now handled by SubstrateKey in the updated fork
 }
 
 impl IndexTrees for ChainTrees {
@@ -50,6 +77,7 @@ impl IndexTrees for ChainTrees {
 			account_id: db.open_tree(b"account_id")?,
 			block_hash: db.open_tree(b"block_hash")?,
 			extrinsic_hash: db.open_tree(b"extrinsic_hash")?,
+			// IDN-specific trees removed
 		})
 	}
 
@@ -57,6 +85,7 @@ impl IndexTrees for ChainTrees {
 		self.account_id.flush()?;
 		self.block_hash.flush()?;
 		self.extrinsic_hash.flush()?;
+		// IDN-specific flushes removed
 		Ok(())
 	}
 }
@@ -64,9 +93,11 @@ impl IndexTrees for ChainTrees {
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq, Hash)]
 #[serde(tag = "type", content = "value")]
 pub enum ChainKey {
-	AccountId(Bytes32),     // For balance events
-	BlockHash(Bytes32),     // For system events
-	ExtrinsicHash(Bytes32), // For transaction events
+	AccountId(Bytes32), // For balance events
+	BlockHash(Bytes32), // For system events
+	ExtrinsicHash(Bytes32), /* For transaction events
+	                     * IDN-specific keys removed - now handled by SubstrateKey in the
+	                     * updated fork */
 }
 
 impl IndexKey for ChainKey {

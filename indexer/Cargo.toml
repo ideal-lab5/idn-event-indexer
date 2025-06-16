@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 ideal-metadata = { path = "../ideal-metadata" }
-acuity-index-substrate = { git = "https://github.com/ideal-lab5/idn-acuity-index-substrate", version = "=0.6.2" }
+acuity-index-substrate = { git = "https://github.com/ideal-lab5/idn-acuity-index-substrate" }
 byte-unit = "4.0.19"
 clap = { version = "4.5.1", features = ["derive"] }
 clap-verbosity-flag = "2.2.0"

@@ -70,3 +70,5 @@ async fn test_process_msg_extrinsic_hash() {
 	assert_eq!(events[1].block_number, 8);
 	assert_eq!(events[2].block_number, 4);
 }
+
+// IDN-specific tests removed - now handled by SubstrateKey tests in the updated fork
