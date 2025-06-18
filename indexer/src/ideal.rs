@@ -14,6 +14,28 @@ use crate::{
 };
 use acuity_index_substrate::*;
 
+/// IDN Subscription ID wrapper that handles H256 to u32 conversion
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SubscriptionId([u8; 32]);
+
+impl SubscriptionId {
+	/// Create a new SubscriptionId from H256 bytes
+	pub fn new(bytes: [u8; 32]) -> Self {
+		Self(bytes)
+	}
+
+	/// Convert to u32 by taking the first 4 bytes (little-endian)
+	pub fn to_u32(&self) -> u32 {
+		u32::from_le_bytes([self.0[0], self.0[1], self.0[2], self.0[3]])
+	}
+}
+
+impl From<[u8; 32]> for SubscriptionId {
+	fn from(bytes: [u8; 32]) -> Self {
+		Self::new(bytes)
+	}
+}
+
 pub struct IdealIndexer;
 
 impl acuity_index_substrate::shared::RuntimeIndexer for IdealIndexer {
@@ -53,71 +75,63 @@ impl acuity_index_substrate::shared::RuntimeIndexer for IdealIndexer {
 			Event::IdnManager(event) => {
 				match event {
 					IdnManagerEvent::SubscriptionCreated { sub_id } => {
-						// Convert H256 to u32 for the subscription ID (taking first 4 bytes)
-						let id_u32 =
-							u32::from_le_bytes([sub_id[0], sub_id[1], sub_id[2], sub_id[3]]);
+						let subscription_id = SubscriptionId::from(sub_id);
 						indexer.index_event(
-							Key::Substrate(SubstrateKey::SubscriptionId(id_u32)),
+							Key::Substrate(SubstrateKey::SubscriptionId(subscription_id.to_u32())),
 							block_number,
 							event_index,
 						)?;
 						1
 					},
 					IdnManagerEvent::SubscriptionTerminated { sub_id } => {
-						let id_u32 =
-							u32::from_le_bytes([sub_id[0], sub_id[1], sub_id[2], sub_id[3]]);
+						let subscription_id = SubscriptionId::from(sub_id);
 						indexer.index_event(
-							Key::Substrate(SubstrateKey::SubscriptionId(id_u32)),
+							Key::Substrate(SubstrateKey::SubscriptionId(subscription_id.to_u32())),
 							block_number,
 							event_index,
 						)?;
 						1
 					},
 					IdnManagerEvent::SubscriptionPaused { sub_id } => {
-						let id_u32 =
-							u32::from_le_bytes([sub_id[0], sub_id[1], sub_id[2], sub_id[3]]);
+						let subscription_id = SubscriptionId::from(sub_id);
 						indexer.index_event(
-							Key::Substrate(SubstrateKey::SubscriptionId(id_u32)),
+							Key::Substrate(SubstrateKey::SubscriptionId(subscription_id.to_u32())),
 							block_number,
 							event_index,
 						)?;
 						1
 					},
 					IdnManagerEvent::SubscriptionUpdated { sub_id } => {
-						let id_u32 =
-							u32::from_le_bytes([sub_id[0], sub_id[1], sub_id[2], sub_id[3]]);
+						let subscription_id = SubscriptionId::from(sub_id);
 						indexer.index_event(
-							Key::Substrate(SubstrateKey::SubscriptionId(id_u32)),
+							Key::Substrate(SubstrateKey::SubscriptionId(subscription_id.to_u32())),
 							block_number,
 							event_index,
 						)?;
 						1
 					},
 					IdnManagerEvent::SubscriptionReactivated { sub_id } => {
-						let id_u32 =
-							u32::from_le_bytes([sub_id[0], sub_id[1], sub_id[2], sub_id[3]]);
+						let subscription_id = SubscriptionId::from(sub_id);
 						indexer.index_event(
-							Key::Substrate(SubstrateKey::SubscriptionId(id_u32)),
+							Key::Substrate(SubstrateKey::SubscriptionId(subscription_id.to_u32())),
 							block_number,
 							event_index,
 						)?;
 						1
 					},
 					IdnManagerEvent::RandomnessDistributed { sub_id } => {
-						let id_u32 =
-							u32::from_le_bytes([sub_id[0], sub_id[1], sub_id[2], sub_id[3]]);
+						let subscription_id = SubscriptionId::from(sub_id);
 						indexer.index_event(
-							Key::Substrate(SubstrateKey::SubscriptionId(id_u32)),
+							Key::Substrate(SubstrateKey::SubscriptionId(subscription_id.to_u32())),
 							block_number,
 							event_index,
 						)?;
 						1
 					},
 					IdnManagerEvent::FeesCollected { sub_id, .. } => {
-						let id_u32 =
-							u32::from_le_bytes([sub_id[0], sub_id[1], sub_id[2], sub_id[3]]);
+						let subscription_id = SubscriptionId::from(sub_id);
 						indexer.index_event(
-							Key::Substrate(SubstrateKey::SubscriptionId(id_u32)),
+							Key::Substrate(SubstrateKey::SubscriptionId(subscription_id.to_u32())),
 							block_number,
 							event_index,
 						)?;
@@ -128,10 +142,9 @@ impl acuity_index_substrate::shared::RuntimeIndexer for IdealIndexer {
 						0
 					},
 					IdnManagerEvent::SubscriptionDistributed { sub_id } => {
-						let id_u32 =
-							u32::from_le_bytes([sub_id[0], sub_id[1], sub_id[2], sub_id[3]]);
+						let subscription_id = SubscriptionId::from(sub_id);
 						indexer.index_event(
-							Key::Substrate(SubstrateKey::SubscriptionId(id_u32)),
+							Key::Substrate(SubstrateKey::SubscriptionId(subscription_id.to_u32())),
 							block_number,
 							event_index,
 						)?;
