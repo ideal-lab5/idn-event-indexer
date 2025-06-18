@@ -1,6 +1,6 @@
 use acuity_index_substrate::{shared::*, substrate::*, websockets::*, *};
 
-use crate::{ideal::SubscriptionId, ChainKey, IdealIndexer};
+use crate::{ChainKey, IdealIndexer};
 
 #[tokio::test]
 async fn test_process_msg_account_balance() {
@@ -71,7 +71,7 @@ async fn test_process_msg_extrinsic_hash() {
 	assert_eq!(events[2].block_number, 4);
 }
 
-// IDN-specific tests for SubstrateKey::SubscriptionId indexing
+// IDN-specific tests for SubstrateKey::SubscriptionId indexing using upstream types
 
 #[tokio::test]
 async fn test_subscription_id_indexing() {
@@ -79,12 +79,12 @@ async fn test_subscription_id_indexing() {
 	let trees = open_trees::<IdealIndexer>(db_config).unwrap();
 	let indexer = Indexer::<IdealIndexer>::new_test(trees.clone());
 
-	// Create different subscription IDs
-	let sub_id_1 = SubscriptionId::new([1u8; 32]);
-	let sub_id_2 = SubscriptionId::new([2u8; 32]);
+	// Create different subscription IDs using upstream SubscriptionId type
+	let sub_id_1 = SubscriptionId::from([1u8; 32]);
+	let sub_id_2 = SubscriptionId::from([2u8; 32]);
 
-	let key1 = Key::Substrate(SubstrateKey::SubscriptionId(sub_id_1.to_u32()));
-	let key2 = Key::Substrate(SubstrateKey::SubscriptionId(sub_id_2.to_u32()));
+	let key1 = Key::Substrate(SubstrateKey::SubscriptionId(sub_id_1));
+	let key2 = Key::Substrate(SubstrateKey::SubscriptionId(sub_id_2));
 
 	// Index events for subscription 1
 	indexer.index_event(key1.clone(), 100, 0).unwrap();
@@ -117,24 +117,24 @@ async fn test_subscription_id_indexing() {
 }
 
 #[tokio::test]
-async fn test_h256_to_u32_conversion() {
-	// Test the conversion logic
+async fn test_h256_to_subscription_id_conversion() {
+	// Test the upstream SubscriptionId type conversion
 	let test_bytes = [
 		0x78, 0x56, 0x34, 0x12, 0xAB, 0xCD, 0xEF, 0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	];
-	let sub_id = SubscriptionId::new(test_bytes);
+	let sub_id = SubscriptionId::from(test_bytes);
 
-	// Should convert to 0x12345678 (little-endian)
-	assert_eq!(sub_id.to_u32(), 0x12345678);
+	// Verify that the SubscriptionId stores the full [u8; 32]
+	assert_eq!(<SubscriptionId as AsRef<[u8; 32]>>::as_ref(&sub_id), &test_bytes);
 
 	// Test another case
 	let test_bytes2 = [
 		0xFF, 0x00, 0x00, 0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0,
 	];
-	let sub_id2 = SubscriptionId::new(test_bytes2);
-	assert_eq!(sub_id2.to_u32(), 0x000000FF);
+	let sub_id2 = SubscriptionId::from(test_bytes2);
+	assert_eq!(<SubscriptionId as AsRef<[u8; 32]>>::as_ref(&sub_id2), &test_bytes2);
 }
 
 #[tokio::test]
@@ -143,8 +143,8 @@ async fn test_multiple_subscription_events_same_block() {
 	let trees = open_trees::<IdealIndexer>(db_config).unwrap();
 	let indexer = Indexer::<IdealIndexer>::new_test(trees.clone());
 
-	let sub_id = SubscriptionId::new([1u8; 32]);
-	let key = Key::Substrate(SubstrateKey::SubscriptionId(sub_id.to_u32()));
+	let sub_id = SubscriptionId::from([1u8; 32]);
+	let key = Key::Substrate(SubstrateKey::SubscriptionId(sub_id));
 	let block_number = 100;
 
 	// Index multiple events in the same block
@@ -171,8 +171,8 @@ async fn test_subscription_events_across_blocks() {
 	let trees = open_trees::<IdealIndexer>(db_config).unwrap();
 	let indexer = Indexer::<IdealIndexer>::new_test(trees.clone());
 
-	let sub_id = SubscriptionId::new([1u8; 32]);
-	let key = Key::Substrate(SubstrateKey::SubscriptionId(sub_id.to_u32()));
+	let sub_id = SubscriptionId::from([1u8; 32]);
+	let key = Key::Substrate(SubstrateKey::SubscriptionId(sub_id));
 
 	// Index events across multiple blocks in non-sequential order
 	indexer.index_event(key.clone(), 105, 1).unwrap();
