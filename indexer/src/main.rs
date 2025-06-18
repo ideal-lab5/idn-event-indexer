@@ -13,7 +13,6 @@ mod tests;
 
 mod config;
 mod ideal;
-mod pallets;
 
 use ideal::IdealIndexer;
 
@@ -64,9 +63,9 @@ impl IndexTrees for ChainTrees {
 #[derive(Serialize, Deserialize, Clone, Debug, Eq, PartialEq, Hash)]
 #[serde(tag = "type", content = "value")]
 pub enum ChainKey {
-	AccountId(Bytes32),     // For balance events
-	BlockHash(Bytes32),     // For system events
-	ExtrinsicHash(Bytes32), // For transaction events
+	AccountId(Bytes32),
+	BlockHash(Bytes32),
+	ExtrinsicHash(Bytes32),
 }
 
 impl IndexKey for ChainKey {
